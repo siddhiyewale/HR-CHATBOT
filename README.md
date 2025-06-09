@@ -13,6 +13,7 @@ Easily customizable for any company’s HR policy
 
 Simple web UI built with Streamlit
 
+
 ##✅ Sample Questions to Try
 
 How many paid leaves do I get?
