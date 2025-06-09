@@ -3,16 +3,16 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load API Key
+# Helps to load the API Key
 load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL = "mistralai/mistral-7b-instruct"
+API_URL = "https://openrouter.ai/api/v1/chat/completions"         # chat completion url
+MODEL_NAME = "mistralai/mistral-7b-instruct"                        # model used(mistral 7B instruct by openrouter)
 
-# Streamlit App UI
-st.set_page_config(page_title="HR Chatbot", page_icon="💼")
-st.title("💼 HR Chatbot")
-st.write("Ask me anything about HR policies, leave, holidays, or recruitment.")
+# Streamlit page setup
+st.set_page_config(page_title="Your HR Chatbot", page_icon="🤖")
+st.title("🤖 Your HR Chatbot")                                           #Title of the web page
+st.write("Ask me anything about HR policies, leave, holidays, or career growth.")
 
 # Function to call LLM
 def get_hr_answer(user_input):
@@ -22,11 +22,11 @@ def get_hr_answer(user_input):
     }
 
     payload = {
-        "model": MODEL,
-        "messages": [
+        "model": MODEL_NAME,
+        "messages": [                        #Message to the AI chatbot
             {
                 "role": "system",
-                "content": "You are an HR assistant for a company. Answer employee questions based on typical HR policies like paid leaves, holidays, work-from-home, recruitment, etc."
+                "content": "You are a friendly HR assistant who answers clearly and politely. Answer employee questions based on typical HR policies like paid leaves, holidays, work-from-home, recruitment, etc."
             },
             {
                 "role": "user",
@@ -36,25 +36,25 @@ def get_hr_answer(user_input):
     }
 
     try:
-        response = requests.post(API_URL, headers=headers, json=payload)
+        response = requests.post(API_URL, headers=headers, json=payload)        # Sending the packages
         response.raise_for_status()  # Raise an exception for HTTP errors
 
-        data = response.json()
+        data = response.json()          # To read the reply
         if "choices" in data:
             return data["choices"][0]["message"]["content"]
-        else:
+        else:                                                             # If something goes wrong
             return "⚠️ API responded but no choices were found. Please try again."
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
-# User Input Field
-user_input = st.text_input("👤 Your question:")
+# User Input Questions
+user_input = st.text_area("👤 Your question:")
 
-# Button to Ask
-if st.button("Ask HR"):
+# Button to Get the Reply
+if st.button("Get answer"):
     if user_input:
-        with st.spinner("Fetching response from HR database..."):
+        with st.spinner("Fetching response from HR database..."):       # Loading
             answer = get_hr_answer(user_input)
-            st.success(answer)
+            st.success(answer)                                      # Getting the answer
     else:
-        st.warning("Please enter a question.")
+        st.warning("Please enter a question.")                    
